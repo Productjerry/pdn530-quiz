@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Quiz · PDN 530</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1C1C1C;--sub:#6B6B6B;--rule:#E0DCD8;--accent:#C0392B;--bg:#F8F7F4;--card:#FFFFFF;--tint:#F2F0EC;--r:10px;--rs:6px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem}
+.wrap{width:100%;max-width:620px}
+.logo{font-size:11px;color:var(--sub);text-align:center;margin-bottom:1.5rem;letter-spacing:.1em;text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);padding:2rem}
+h1{font-size:26px;font-weight:600;margin-bottom:.25rem}
+.sub{font-size:14px;color:var(--sub);margin-bottom:1.75rem;line-height:1.5}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.75rem}
+.chip{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;background:var(--tint);color:var(--sub);border:1px solid var(--rule)}
+label{font-size:13px;color:var(--sub);display:block;margin-bottom:6px;font-weight:500}
+input[type=text]{width:100%;padding:11px 14px;font-size:15px;border:1px solid var(--rule);border-radius:var(--rs);background:var(--bg);color:var(--ink);margin-bottom:1rem;outline:none;transition:border .15s}
+input[type=text]:focus{border-color:var(--ink)}
+.btn{width:100%;padding:12px;font-size:15px;font-weight:600;cursor:pointer;border-radius:var(--rs);border:none;transition:opacity .15s}
+.btn-p{background:var(--ink);color:#fff}.btn-p:hover{opacity:.85}.btn-p:disabled{opacity:.3;cursor:not-allowed}
+.timer-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.timer-txt{font-size:16px;font-weight:600}.timer-count{font-size:12px;color:var(--sub)}
+.bar{height:5px;background:var(--rule);border-radius:3px;overflow:hidden;margin-bottom:1.25rem}
+.bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 1s linear}
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
+.prog-txt{font-size:12px;color:var(--sub)}
+.dots{display:flex;gap:4px;flex-wrap:wrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--rule);cursor:pointer;transition:background .1s}
+.dot.answered{background:var(--ink)}.dot.current{background:var(--accent)}
+.q-num{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.12em;margin-bottom:8px;text-transform:uppercase}
+.q-txt{font-size:17px;font-weight:500;line-height:1.55;margin-bottom:1.5rem;color:var(--ink)}
+.opt{display:block;width:100%;padding:12px 16px;margin-bottom:8px;border:1px solid var(--rule);border-radius:var(--rs);cursor:pointer;font-size:14px;color:var(--ink);background:var(--card);text-align:left;transition:all .12s;line-height:1.4}
+.opt:hover{background:var(--tint);border-color:#C8C4BC}
+.opt.selected{border-color:var(--ink);background:var(--tint)}
+.nav-row{display:flex;gap:8px;margin-top:1.25rem}
+.btn-s{flex:1;padding:10px;font-size:14px;cursor:pointer;border-radius:var(--rs);background:transparent;border:1px solid var(--rule);color:var(--ink);font-weight:500;transition:background .12s}
+.btn-s:hover{background:var(--tint)}.btn-s:disabled{opacity:.3;cursor:not-allowed}
+.submit-row{margin-top:10px}
+.warn{background:#fff3cd;border:1px solid #ffc107;border-radius:var(--rs);padding:10px 14px;font-size:13px;color:#856404;margin-bottom:1.25rem;display:none}
+.hidden{display:none}
+.res-head{text-align:center;padding-bottom:1.5rem;border-bottom:1px solid var(--rule);margin-bottom:1.5rem}
+.res-name{font-size:15px;color:var(--sub);margin-bottom:.5rem}
+.score-big{font-size:64px;font-weight:700;color:var(--accent);line-height:1}
+.score-of{font-size:14px;color:var(--sub);margin-top:4px}
+.grade-badge{display:inline-block;margin-top:1rem;padding:5px 18px;border-radius:20px;font-size:13px;font-weight:600}
+.gd{background:#e8f5e9;color:#1b5e20}.gp{background:#e3f2fd;color:#0d47a1}.gn{background:#ffebee;color:#b71c1c}
+.sg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:1.5rem}
+.sb{background:var(--tint);border-radius:var(--rs);padding:1rem;text-align:center}
+.sv{font-size:22px;font-weight:600;color:var(--ink)}.sl{font-size:12px;color:var(--sub);margin-top:2px}
+.saving{font-size:12px;color:var(--sub);text-align:center;margin-top:10px;min-height:18px}
+@media(max-width:480px){body{padding:1rem .75rem}.card{padding:1.5rem}.q-txt{font-size:15px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="logo">PDN 530 · AltSchool of Product Design · Karatu 2025</div>
+
+<div id="sn" class="card">
+  <h1>Design Quiz</h1>
+  <p class="sub">Prototyping in Product Design &amp; Responsive Design Principles</p>
+  <div class="chips"><span class="chip">20 questions</span><span class="chip">10 minutes</span><span class="chip">Multiple choice</span></div>
+  <label for="ni">Your full name</label>
+  <input type="text" id="ni" placeholder="e.g. Amara Okafor" autocomplete="off"/>
+  <button class="btn btn-p" id="sb2" onclick="startQuiz()" disabled>Start quiz →</button>
+</div>
+
+<div id="sq" class="card hidden">
+  <div class="warn" id="tw">⏱ Less than 2 minutes remaining — please submit soon.</div>
+  <div class="timer-row"><span class="timer-txt" id="tt">10:00</span><span class="timer-count" id="ac">0 of 20 answered</span></div>
+  <div class="bar"><div class="bar-fill" id="bf" style="width:100%"></div></div>
+  <div class="prog-row"><span class="prog-txt" id="pt">Question 1 of 20</span><div class="dots" id="qd"></div></div>
+  <div class="q-num" id="qn">Question 01</div>
+  <div class="q-txt" id="qt"></div>
+  <div id="ow"></div>
+  <div class="nav-row">
+    <button class="btn-s" id="pb" onclick="prevQ()">← Prev</button>
+    <button class="btn-s" id="nb" onclick="nextQ()">Next →</button>
+  </div>
+  <div class="submit-row"><button class="btn btn-p" onclick="confirmSubmit()">Submit quiz</button></div>
+  <p class="saving" id="sm"></p>
+</div>
+
+<div id="sr" class="card hidden">
+  <div class="res-head">
+    <div class="res-name" id="rn"></div>
+    <div class="score-big" id="rs"></div>
+    <div class="score-of" id="ro"></div>
+    <div class="grade-badge" id="rg"></div>
+  </div>
+  <div class="sg">
+    <div class="sb"><div class="sv" id="rc"></div><div class="sl">Correct</div></div>
+    <div class="sb"><div class="sv" id="rw2"></div><div class="sl">Wrong</div></div>
+    <div class="sb"><div class="sv" id="rsk"></div><div class="sl">Skipped</div></div>
+    <div class="sb"><div class="sv" id="rt"></div><div class="sl">Time used</div></div>
+  </div>
+  <button class="btn btn-p" onclick="retake()">Retake quiz</button>
+  <p class="saving" id="rsav"></p>
+</div>
+</div>
+
+<script>
+var DB_URL="PASTE_YOUR_FIREBASE_URL_HERE";
+
+var Q=[
+  {q:"What is a prototype in product design?",o:["A finished product ready for launch","A simulation of a product before it is built","A technical specification document","A set of user stories"],a:1},
+  {q:"Which fidelity type is best for testing ideas quickly and cheaply?",o:["High fidelity","Mid fidelity","Low fidelity","Coded prototype"],a:2},
+  {q:"What distinguishes a prototype from a wireframe?",o:["Wireframes use colour; prototypes don't","Prototypes are clickable; wireframes are static","Prototypes are printed; wireframes are digital","Wireframes require code; prototypes don't"],a:1},
+  {q:"Which tool is most widely used by modern teams for design and prototyping in one place?",o:["ProtoPie","Adobe XD","Framer","Figma"],a:3},
+  {q:"What does a user flow in a prototype describe?",o:["The colour palette of the interface","The path a user follows through the product","The animation timing of transitions","The code architecture of the app"],a:1},
+  {q:"Which of these is a key element of a good prototype?",o:["Polished visual design","Real backend data","Feedback states — success, loading, error","Developer handoff documentation"],a:2},
+  {q:"High-fidelity prototypes are most appropriate for which stage?",o:["Early idea exploration","Rough concept testing","Stakeholder presentations and developer handoff","Paper sketching sessions"],a:2},
+  {q:"What is the primary purpose of usability testing with a prototype?",o:["To impress clients with visual polish","To observe where users struggle or hesitate","To measure loading performance","To generate final assets"],a:1},
+  {q:"Which analogy best describes a prototype?",o:["A movie trailer before the full film","A completed film ready for release","A movie script without dialogue","A film review after release"],a:0},
+  {q:"Mid-fidelity prototypes typically include which of the following?",o:["Full colour and animations","Paper and pen sketches","Grey wireframes with clickable flows","Final product imagery"],a:2},
+  {q:"In the UX process, prototyping comes directly after which stage?",o:["Research","Testing","Wireframes","Development"],a:2},
+  {q:"Which company is cited as using prototypes to test features before building them?",o:["Microsoft","Airbnb","IBM","Oracle"],a:1},
+  {q:"What does visual hierarchy in design control?",o:["The grid system of a layout","The order in which the eye moves through a design","The spacing between elements","The number of typefaces used"],a:1},
+  {q:"What is the F-Pattern in reading behaviour?",o:["Users always read diagonally from centre","Users scan horizontally across the top then down the left edge","Users read in a circular pattern outward","Users only read the bottom-right corner"],a:1},
+  {q:"What does the principle of Alignment state?",o:["Every element should use the same colour","Elements should be randomly placed for visual interest","Every element should have a visual connection to another element on the page","Only headings need to be aligned"],a:2},
+  {q:"What does the 8pt grid system ensure?",o:["Every element uses exactly 8 colours","Spacing values are multiples of 8, creating visual rhythm","All fonts are 8pt size","Images are resized to 8px increments"],a:1},
+  {q:"According to the Gestalt Law of Proximity, objects near each other are perceived as...?",o:["Competing with each other","A group","Unrelated","More important"],a:1},
+  {q:"What is the 60-30-10 rule in design?",o:["60% animation, 30% static, 10% interactive","60% surface, 30% neutral, 10% accent colour","60% text, 30% images, 10% whitespace","60% mobile, 30% tablet, 10% desktop"],a:1},
+  {q:"Which alignment type is the best default for body text?",o:["Centre alignment","Right alignment","Edge alignment","Left alignment"],a:3},
+  {q:"What does the Z-Pattern describe in UI design?",o:["A zigzag layout of navigation items","Eye movement: top-left to top-right, diagonal, then bottom-right","A method for organising form fields","A technique for stacking visual layers"],a:1},
+];
+
+var cQ=0,ans=new Array(20).fill(null),sLeft=600,tInt=null,sTime=null,name='',done=false;
+
+var ni=document.getElementById('ni');
+ni.addEventListener('input',function(){document.getElementById('sb2').disabled=ni.value.trim().length<2});
+ni.addEventListener('keydown',function(e){if(e.key==='Enter'&&ni.value.trim().length>=2)startQuiz()});
+
+function show(id){['sn','sq','sr'].forEach(function(s){document.getElementById(s).classList.add('hidden')});document.getElementById(id).classList.remove('hidden')}
+
+function startQuiz(){
+  name=ni.value.trim();if(name.length<2)return;
+  sTime=Date.now();show('sq');buildDots();renderQ();startTimer();
+}
+
+function buildDots(){
+  var w=document.getElementById('qd');w.innerHTML='';
+  Q.forEach(function(_,i){
+    var d=document.createElement('div');
+    d.className='dot'+(i===0?' current':'');
+    d.title='Q'+(i+1);
+    d.onclick=(function(idx){return function(){cQ=idx;renderQ()}})(i);
+    d.id='d'+i;w.appendChild(d);
+  });
+}
+
+function updateDots(){
+  Q.forEach(function(_,i){
+    var d=document.getElementById('d'+i);if(!d)return;
+    d.className='dot'+(i===cQ?' current':ans[i]!==null?' answered':'');
+  });
+  document.getElementById('ac').textContent=ans.filter(function(a){return a!==null}).length+' of 20 answered';
+}
+
+function startTimer(){
+  tInt=setInterval(function(){
+    sLeft--;
+    if(sLeft<=0){clearInterval(tInt);submitQuiz();return}
+    if(sLeft===120)document.getElementById('tw').style.display='block';
+    updateTimer();
+  },1000);
+}
+
+function updateTimer(){
+  var m=Math.floor(sLeft/60),s=sLeft%60;
+  document.getElementById('tt').textContent=m+':'+(s<10?'0':'')+s;
+  var pct=(sLeft/600)*100;
+  var f=document.getElementById('bf');
+  f.style.width=pct+'%';
+  f.style.background=sLeft<=60?'#e53935':sLeft<=180?'#f57c00':'#C0392B';
+}
+
+function renderQ(){
+  var q=Q[cQ];
+  document.getElementById('qn').textContent='Question '+(cQ+1<10?'0':'')+(cQ+1);
+  document.getElementById('qt').textContent=q.q;
+  document.getElementById('pt').textContent='Question '+(cQ+1)+' of 20';
+  document.getElementById('pb').disabled=cQ===0;
+  document.getElementById('nb').disabled=cQ===19;
+  var w=document.getElementById('ow');w.innerHTML='';
+  q.o.forEach(function(opt,i){
+    var b=document.createElement('button');
+    b.className='opt'+(ans[cQ]===i?' selected':'');
+    b.textContent=opt;
+    b.onclick=(function(idx){return function(){pick(idx)}})(i);
+    w.appendChild(b);
+  });
+  updateDots();
+}
+
+function pick(i){if(done)return;ans[cQ]=i;renderQ()}
+function nextQ(){if(cQ<19){cQ++;renderQ()}}
+function prevQ(){if(cQ>0){cQ--;renderQ()}}
+
+function confirmSubmit(){
+  var left=ans.filter(function(a){return a===null}).length;
+  if(left>0&&!confirm(left+' question(s) unanswered. Submit anyway?'))return;
+  submitQuiz();
+}
+
+function submitQuiz(){
+  if(done)return;done=true;
+  clearInterval(tInt);
+  var used=Math.round((Date.now()-sTime)/1000);
+  var m=Math.floor(used/60),s=used%60;
+  var tStr=m+'m '+s+'s';
+  var correct=0,skipped=0;
+  ans.forEach(function(a,i){if(a===null)skipped++;else if(a===Q[i].a)correct++});
+  var wrong=20-correct-skipped;
+  var pct=Math.round((correct/20)*100);
+  var grade,gc;
+  if(pct>=80){grade='Distinction';gc='gd'}else if(pct>=60){grade='Pass';gc='gp'}else{grade='Needs revision';gc='gn'}
+
+  document.getElementById('rn').textContent=name;
+  document.getElementById('rs').textContent=pct+'%';
+  document.getElementById('ro').textContent=correct+' of 20 correct';
+  var rg=document.getElementById('rg');rg.textContent=grade;rg.className='grade-badge '+gc;
+  document.getElementById('rc').textContent=correct;
+  document.getElementById('rw2').textContent=wrong;
+  document.getElementById('rsk').textContent=skipped;
+  document.getElementById('rt').textContent=tStr;
+  show('sr');
+
+  var rec={name:name,score:pct,correct:correct,wrong:wrong,skipped:skipped,time:tStr,grade:grade,at:new Date().toLocaleString('en-GB',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'short',year:'numeric'})};
+  save(rec);
+}
+
+function save(rec){
+  var msg=document.getElementById('rsav');
+  msg.textContent='Saving your result...';
+  var key=name.toLowerCase().replace(/[^a-z0-9]/g,'_')+'_'+Date.now();
+  if(DB_URL==='PASTE_YOUR_FIREBASE_URL_HERE'){
+    fallback(rec,msg,'No database set up yet — saved locally.');return;
+  }
+  fetch(DB_URL+'/results/'+key+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(rec)})
+    .then(function(r){if(r.ok){msg.textContent='Result saved.'}else throw new Error()})
+    .catch(function(){fallback(rec,msg,'Saved locally (offline mode).')});
+}
+
+function fallback(rec,msg,txt){
+  try{var ls=JSON.parse(localStorage.getItem('pdn530')||'[]');ls.push(rec);localStorage.setItem('pdn530',JSON.stringify(ls))}catch(e){}
+  if(msg)msg.textContent=txt;
+}
+
+function retake(){
+  done=false;cQ=0;ans=new Array(20).fill(null);sLeft=600;sTime=Date.now();
+  document.getElementById('tw').style.display='none';
+  show('sq');buildDots();renderQ();updateTimer();startTimer();
+}
+</script>
+</body>
+</html>

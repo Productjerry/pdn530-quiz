@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Results · PDN 530</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1C1C1C;--sub:#6B6B6B;--rule:#E0DCD8;--accent:#C0392B;--bg:#F8F7F4;--card:#FFFFFF;--tint:#F2F0EC;--r:10px;--rs:6px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding:2rem 1rem}
+.wrap{max-width:960px;margin:0 auto}
+.logo{font-size:11px;color:var(--sub);text-align:center;margin-bottom:1.5rem;letter-spacing:.1em;text-transform:uppercase}
+.top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap}
+h1{font-size:24px;font-weight:600}
+.right-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sub);background:var(--card);border:1px solid var(--rule);border-radius:20px;padding:5px 12px}
+.dot-live{width:7px;height:7px;border-radius:50%;background:#2e7d32;flex-shrink:0;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.btn-sm{padding:7px 14px;font-size:13px;cursor:pointer;border-radius:var(--rs);border:1px solid var(--rule);color:var(--ink);background:var(--card);font-weight:500;transition:background .12s;white-space:nowrap}
+.btn-sm:hover{background:var(--tint)}
+.btn-danger{border-color:#f09595;color:#b71c1c}.btn-danger:hover{background:#ffebee}
+.sg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:1.25rem}
+.sc{background:var(--card);border:1px solid var(--rule);border-radius:var(--rs);padding:1.1rem;text-align:center}
+.sv{font-size:28px;font-weight:700;color:var(--ink);line-height:1}.sl{font-size:12px;color:var(--sub);margin-top:5px}
+.dist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:1.25rem}
+.dc{background:var(--card);border:1px solid var(--rule);border-radius:var(--rs);padding:1rem;display:flex;align-items:center;gap:12px}
+.di{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.did{background:#e8f5e9;color:#1b5e20}.dip{background:#e3f2fd;color:#0d47a1}.din{background:#ffebee;color:#b71c1c}
+.dn{font-size:20px;font-weight:700;color:var(--ink)}.dl{font-size:12px;color:var(--sub)}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);overflow:hidden}
+.sort-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--rule);flex-wrap:wrap;background:var(--tint)}
+.sort-lbl{font-size:12px;color:var(--sub);font-weight:500;margin-right:2px}
+.sort-btn{padding:4px 12px;font-size:12px;cursor:pointer;border-radius:20px;border:1px solid var(--rule);color:var(--sub);background:transparent;transition:all .12s}
+.sort-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.search-wrap{margin-left:auto}
+.si{padding:5px 12px;font-size:13px;border:1px solid var(--rule);border-radius:var(--rs);background:var(--card);color:var(--ink);outline:none;width:180px}
+.si:focus{border-color:#aaa}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+thead tr{background:var(--tint)}
+th{padding:11px 14px;font-size:11px;font-weight:600;color:var(--sub);text-align:left;letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--rule)}
+td{padding:12px 14px;font-size:13px;color:var(--ink);border-bottom:1px solid var(--rule);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#fafaf8}
+.sc-wrap{display:flex;align-items:center;gap:8px}
+.sb-bg{flex:1;height:6px;background:var(--rule);border-radius:3px;overflow:hidden;min-width:40px}
+.sb-fill{height:6px;border-radius:3px;background:var(--accent)}
+.sc-pct{font-size:13px;font-weight:600;min-width:36px}
+.gp2{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.gd{background:#e8f5e9;color:#1b5e20}.gp{background:#e3f2fd;color:#0d47a1}.gn{background:#ffebee;color:#b71c1c}
+.empty td{text-align:center;padding:3.5rem;color:var(--sub);font-size:14px}
+.footer-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-top:1px solid var(--rule);background:var(--tint)}
+.footer-txt{font-size:12px;color:var(--sub)}
+.cr{width:42px}.cn{width:22%}.csc{width:30%}.cco{width:9%}.cg{width:14%}.cti{width:10%}.cat{width:17%}
+@media(max-width:680px){.sg{grid-template-columns:repeat(2,1fr)}.cco,.cat{display:none}.si{width:130px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="logo">PDN 530 · AltSchool of Product Design · Karatu 2025 — Instructor Dashboard</div>
+
+<div class="top-row">
+  <h1>Live quiz results</h1>
+  <div class="right-row">
+    <div class="live-badge"><div class="dot-live"></div>Live — refreshes every 8s</div>
+    <button class="btn-sm" onclick="load()">Refresh now</button>
+    <button class="btn-sm" onclick="exportCSV()">Export CSV</button>
+    <button class="btn-sm btn-danger" onclick="clearAll()">Clear all</button>
+  </div>
+</div>
+
+<div class="sg">
+  <div class="sc"><div class="sv" id="s-total">—</div><div class="sl">Submissions</div></div>
+  <div class="sc"><div class="sv" id="s-avg">—</div><div class="sl">Class average</div></div>
+  <div class="sc"><div class="sv" id="s-high">—</div><div class="sl">Top score</div></div>
+  <div class="sc"><div class="sv" id="s-pass">—</div><div class="sl">Pass rate</div></div>
+</div>
+
+<div class="dist">
+  <div class="dc"><div class="di did">D</div><div><div class="dn" id="d-d">0</div><div class="dl">Distinction (80%+)</div></div></div>
+  <div class="dc"><div class="di dip">P</div><div><div class="dn" id="d-p">0</div><div class="dl">Pass (60–79%)</div></div></div>
+  <div class="dc"><div class="di din">N</div><div><div class="dn" id="d-n">0</div><div class="dl">Needs revision (&lt;60%)</div></div></div>
+</div>
+
+<div class="card">
+  <div class="sort-bar">
+    <span class="sort-lbl">Sort</span>
+    <button class="sort-btn active" onclick="setSort('score',this)">Score ↓</button>
+    <button class="sort-btn" onclick="setSort('name',this)">Name A–Z</button>
+    <button class="sort-btn" onclick="setSort('recent',this)">Recent first</button>
+    <div class="search-wrap"><input class="si" type="text" id="search" placeholder="Search student..." oninput="render()"/></div>
+  </div>
+  <table>
+    <thead><tr>
+      <th class="cr">#</th><th class="cn">Student</th><th class="csc">Score</th>
+      <th class="cco">Correct</th><th class="cg">Grade</th><th class="cti">Time</th><th class="cat">Submitted</th>
+    </tr></thead>
+    <tbody id="tb"><tr class="empty"><td colspan="7">No submissions yet.</td></tr></tbody>
+  </table>
+  <div class="footer-bar">
+    <span class="footer-txt" id="fc">0 students</span>
+    <span class="footer-txt" id="lu">—</span>
+  </div>
+</div>
+</div>
+
+<script>
+var DB_URL="PASTE_YOUR_FIREBASE_URL_HERE";
+var all=[],sort='score';
+
+function gc(g){return g==='Distinction'?'gd':g==='Pass'?'gp':'gn'}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+
+function setSort(s,btn){sort=s;document.querySelectorAll('.sort-btn').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');render()}
+
+function render(){
+  var q=(document.getElementById('search').value||'').toLowerCase();
+  var data=all.filter(function(r){return r.name.toLowerCase().indexOf(q)>=0});
+  if(sort==='score') data.sort(function(a,b){return b.score-a.score});
+  else if(sort==='name') data.sort(function(a,b){return a.name.localeCompare(b.name)});
+  else data.sort(function(a,b){return(b._ts||0)-(a._ts||0)});
+  var tb=document.getElementById('tb');
+  if(!data.length){tb.innerHTML='<tr class="empty"><td colspan="7">'+(all.length?'No match.':'No submissions yet. Share the quiz link with your students.')+'</td></tr>';return}
+  tb.innerHTML=data.map(function(r,i){
+    return'<tr><td style="color:var(--sub);font-size:12px">'+(i+1)+'</td>'+
+    '<td style="font-weight:600">'+esc(r.name)+'</td>'+
+    '<td><div class="sc-wrap"><div class="sb-bg"><div class="sb-fill" style="width:'+r.score+'%"></div></div><span class="sc-pct">'+r.score+'%</span></div></td>'+
+    '<td style="color:var(--sub)">'+r.correct+'/20</td>'+
+    '<td><span class="gp2 '+gc(r.grade)+'">'+r.grade+'</span></td>'+
+    '<td style="color:var(--sub);font-size:12px">'+r.time+'</td>'+
+    '<td style="color:var(--sub);font-size:12px">'+esc(r.at)+'</td></tr>';
+  }).join('');
+}
+
+function stats(data){
+  if(!data.length){['s-total','s-avg','s-high','s-pass'].forEach(function(id){document.getElementById(id).textContent='—'});['d-d','d-p','d-n'].forEach(function(id){document.getElementById(id).textContent='0'});document.getElementById('fc').textContent='0 students';return}
+  var n=data.length,avg=Math.round(data.reduce(function(s,r){return s+r.score},0)/n),high=Math.max.apply(null,data.map(function(r){return r.score})),pass=data.filter(function(r){return r.score>=60}).length;
+  document.getElementById('s-total').textContent=n;
+  document.getElementById('s-avg').textContent=avg+'%';
+  document.getElementById('s-high').textContent=high+'%';
+  document.getElementById('s-pass').textContent=Math.round(pass/n*100)+'%';
+  document.getElementById('d-d').textContent=data.filter(function(r){return r.score>=80}).length;
+  document.getElementById('d-p').textContent=data.filter(function(r){return r.score>=60&&r.score<80}).length;
+  document.getElementById('d-n').textContent=data.filter(function(r){return r.score<60}).length;
+  document.getElementById('fc').textContent=n+' student'+(n!==1?'s':'');
+  document.getElementById('lu').textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+
+function load(){
+  if(DB_URL==='PASTE_YOUR_FIREBASE_URL_HERE'){try{all=JSON.parse(localStorage.getItem('pdn530')||'[]')}catch(e){all=[]}stats(all);render();return}
+  fetch(DB_URL+'/results.json')
+    .then(function(r){return r.json()})
+    .then(function(data){
+      if(!data){all=[];stats([]);render();return}
+      all=Object.keys(data).map(function(k){var r=data[k];r._ts=parseInt(k.split('_').pop())||0;return r});
+      stats(all);render();
+    })
+    .catch(function(){try{all=JSON.parse(localStorage.getItem('pdn530')||'[]')}catch(e){all=[]}stats(all);render()});
+}
+
+function clearAll(){
+  if(!confirm('Clear ALL quiz results? This cannot be undone.'))return;
+  if(DB_URL!=='PASTE_YOUR_FIREBASE_URL_HERE') fetch(DB_URL+'/results.json',{method:'DELETE'}).catch(function(){});
+  localStorage.removeItem('pdn530');
+  all=[];stats([]);render();
+}
+
+function exportCSV(){
+  if(!all.length){alert('No results to export.');return}
+  var csv=['Name,Score,Correct,Wrong,Skipped,Time,Grade,Submitted'].concat(all.map(function(r){return[r.name,r.score,r.correct,r.wrong,r.skipped,r.time,r.grade,r.at].join(',')})).join('\n');
+  var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='PDN530-results-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+}
+
+load();
+setInterval(load,8000);
+</script>
+</body>
+</html>
